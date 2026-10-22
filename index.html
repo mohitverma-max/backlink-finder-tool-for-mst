@@ -1,0 +1,336 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0}[hidden]{display:none!important}</style>
+<title>Backlink Finder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Free guest post finder by Mohit's SEO Training. Enter your niche keywords, pick footprints like Write for us, and open Google results of sites accepting guest posts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single working column. Brand band on top, then a three-step form (keywords, footprints, options), then live query cards with Google buttons. */
+:root{
+  --navy:#23386f;
+  --teal:#4590a5;
+  --bg:#f3f6f9;
+  --surface:#ffffff;
+  --ink:#16213d;
+  --muted:#5b6782;
+  --line:#d9e1ea;
+  --chip:#eaf1f6;
+  --chip-on:#23386f;
+  --chip-on-ink:#ffffff;
+  --code-bg:#f0f4f8;
+  --ok:#2f7d5b;
+  --warn:#a86a12;
+  --band-ink:#ffffff;
+  --focus:#4590a5;
+  --font-display:"Outfit","Segoe UI",system-ui,sans-serif;
+  --font-body:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1424; --surface:#161f35; --ink:#e7ecf5; --muted:#9aa6c0; --line:#2a3754;
+    --chip:#1d2943; --chip-on:#4590a5; --chip-on-ink:#06131a; --code-bg:#0f1729;
+    --ok:#5cc29a; --warn:#e2a64a; --focus:#7cc3d6; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1424; --surface:#161f35; --ink:#e7ecf5; --muted:#9aa6c0; --line:#2a3754;
+  --chip:#1d2943; --chip-on:#4590a5; --chip-on-ink:#06131a; --code-bg:#0f1729;
+  --ok:#5cc29a; --warn:#e2a64a; --focus:#7cc3d6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Brand band */
+.band{background:linear-gradient(120deg,var(--navy) 0%,var(--teal) 100%);color:var(--band-ink)}
+.band .wrap{padding-block:34px 30px;display:grid;gap:10px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;font-weight:600}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.lede{margin:0;max-width:60ch;opacity:.92}
+
+main .wrap{padding-block:26px 40px;display:grid;gap:18px}
+
+.step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:14px}
+.step-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.num{font-family:var(--font-display);font-weight:700;color:var(--teal);font-size:14px;letter-spacing:.06em}
+h2{font-family:var(--font-display);font-weight:600;font-size:20px;margin:0}
+.hint{color:var(--muted);font-size:13.5px;margin:0}
+
+/* Keyword input */
+.kw-box{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);cursor:text}
+.kw-box:focus-within{outline:2px solid var(--focus);outline-offset:1px}
+.kw{display:inline-flex;align-items:center;gap:6px;background:var(--chip-on);color:var(--chip-on-ink);border-radius:999px;padding:5px 6px 5px 12px;font-size:14px;font-weight:500;max-width:100%}
+.kw span{overflow-wrap:anywhere}
+.kw button{border:0;background:transparent;color:inherit;cursor:pointer;width:22px;height:22px;border-radius:50%;font-size:15px;line-height:1;display:grid;place-items:center}
+.kw button:hover{background:rgba(255,255,255,.2)}
+#kwInput{flex:1 1 180px;min-width:0;border:0;background:transparent;color:var(--ink);font:inherit;padding:6px 4px;outline:none}
+
+/* Footprint chips */
+.group-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:7px 13px;font:inherit;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background .15s,color .15s,border-color .15s}
+.chip .tick{width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;display:inline-grid;place-items:center;font-size:10px;opacity:.6}
+.chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:var(--chip-on)}
+.chip[aria-pressed="true"] .tick{opacity:1;background:currentColor}
+.chip[aria-pressed="true"] .tick::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--chip-on)}
+.chip code{font-family:var(--font-mono);font-size:12.5px}
+.row-actions{display:flex;gap:14px;flex-wrap:wrap}
+.linkbtn{border:0;background:none;color:var(--teal);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;padding:0}
+.linkbtn:hover{text-decoration:underline}
+
+/* Options */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.field{display:grid;gap:6px;min-width:0}
+.field label{font-size:13px;font-weight:600;color:var(--muted)}
+select,input[type="text"]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+.toggle{display:flex;align-items:flex-start;gap:10px;font-size:14px;cursor:pointer}
+.toggle input{margin-top:3px;accent-color:var(--teal);width:16px;height:16px}
+
+/* Results */
+.results-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.count{color:var(--muted);font-size:13.5px;font-variant-numeric:tabular-nums}
+.cards{display:grid;gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px;background:var(--surface);min-width:0}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.card h3{font-family:var(--font-display);font-weight:600;font-size:17px;margin:0;overflow-wrap:anywhere}
+.part{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.query{font-family:var(--font-mono);font-size:13px;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;white-space:pre-wrap;word-break:break-word;margin:0;user-select:all}
+.card-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-google{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(120deg,var(--navy),var(--teal));color:#fff;text-decoration:none;font-weight:600;border-radius:9px;padding:10px 16px;font-size:14.5px}
+.btn-google:hover{filter:brightness(1.08)}
+.btn-google svg{width:16px;height:16px}
+.btn-ghost{border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-weight:500;font-size:14px;border-radius:9px;padding:9px 14px;cursor:pointer}
+.btn-ghost:hover{border-color:var(--teal)}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:20px;color:var(--muted);text-align:center}
+.note{font-size:13px;color:var(--warn);margin:0}
+
+/* Checklist */
+.check{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.check li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:14px}
+.check li::before{content:"";width:16px;height:16px;border-radius:4px;border:1.5px solid var(--teal);margin-top:3px}
+
+footer .wrap{padding-block:0 32px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:var(--teal);font-weight:600;text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head><body>
+
+<main>
+  <div class="wrap">
+
+    <section class="step" aria-labelledby="s1">
+      <div class="step-head"><span class="num">STEP 1</span><h2 id="s1">Add your niche keywords</h2></div>
+      <div class="kw-box" id="kwBox">
+        <div id="kwList" style="display:contents"></div>
+        <input id="kwInput" type="text" placeholder="e.g. digital marketing" aria-label="Add a keyword" autocomplete="off">
+      </div>
+      <label class="toggle"><input type="checkbox" id="exact" checked> Exact match</label>
+    </section>
+
+    <section class="step" aria-labelledby="s2">
+      <div class="step-head"><span class="num">STEP 2</span><h2 id="s2">Choose footprints</h2></div>
+      <div class="chips" id="chipsText"></div>
+      <p class="group-label">Advanced</p>
+      <div class="chips" id="chipsAdv"></div>
+      <div class="row-actions">
+        <button class="linkbtn" id="selAll" type="button">Select all</button>
+        <button class="linkbtn" id="selNone" type="button">Clear</button>
+      </div>
+    </section>
+
+    <section class="step" aria-labelledby="s3">
+      <div class="step-head"><span class="num">STEP 3</span><h2 id="s3">Filters</h2></div>
+      <div class="opts">
+        <div class="field">
+          <label for="region">Google region</label>
+          <select id="region">
+            <option value="www.google.co.in|in">India (google.co.in)</option>
+            <option value="www.google.com|us">United States (google.com)</option>
+            <option value="www.google.co.uk|uk">United Kingdom (google.co.uk)</option>
+            <option value="www.google.com.au|au">Australia (google.com.au)</option>
+            <option value="www.google.ca|ca">Canada (google.ca)</option>
+            <option value="www.google.ae|ae">UAE (google.ae)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="time">Page updated</label>
+          <select id="time">
+            <option value="">Any time</option>
+            <option value="qdr:y">Past year</option>
+            <option value="qdr:m6">Past 6 months</option>
+            <option value="qdr:m">Past month</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="exclude">Exclude sites</label>
+          <input id="exclude" type="text" placeholder="e.g. example.com" autocomplete="off">
+        </div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="noSocial" checked> Hide social sites</label>
+    </section>
+
+    <section class="step" aria-labelledby="s4" aria-live="polite">
+      <div class="results-head">
+        <div class="step-head"><span class="num">STEP 4</span><h2 id="s4">Search on Google</h2></div>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="cards" id="cards"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Built by <a href="https://mohitsseotraining.com/" target="_blank" rel="noopener">Mohit's SEO Training</a></span>
+    <a href="https://mohitsseotraining.com/free-seo-tool/" target="_blank" rel="noopener">More free SEO tools</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  var TEXT_FP = [
+    {id:'wfu', q:'"write for us"', label:'Write for us', on:true},
+    {id:'cw', q:'"contributors wanted"', label:'Contributors wanted', on:true},
+    {id:'gp', q:'"guest post"', label:'Guest post', on:true},
+    {id:'sgp', q:'"submit a guest post"', label:'Submit a guest post', on:false},
+    {id:'bac', q:'"become a contributor"', label:'Become a contributor', on:true},
+    {id:'agp', q:'"accepting guest posts"', label:'Accepting guest posts', on:false},
+    {id:'ga', q:'"guest author"', label:'Guest author', on:false},
+    {id:'sa', q:'"submit an article"', label:'Submit an article', on:false},
+    {id:'cg', q:'"contributor guidelines"', label:'Contributor guidelines', on:false},
+    {id:'wg', q:'"write for me"', label:'Write for me', on:false}
+  ];
+  var ADV_FP = [
+    {id:'itw', q:'intitle:"write for us"', label:'intitle:"write for us"', code:true, on:false},
+    {id:'iuw', q:'inurl:write-for-us', label:'inurl:write-for-us', code:true, on:false},
+    {id:'iug', q:'inurl:guest-post', label:'inurl:guest-post', code:true, on:false},
+    {id:'iuc', q:'inurl:contribute', label:'inurl:contribute', code:true, on:false}
+  ];
+  var SOCIAL = ['medium.com','linkedin.com','quora.com','reddit.com','facebook.com','pinterest.com'];
+  var MAX_FP_PER_QUERY = 6; // keeps each query well inside Google's 32-word limit
+
+  var keywords = ['digital marketing','seo'];
+  var state = {};
+  TEXT_FP.concat(ADV_FP).forEach(function(f){ state[f.id] = f.on; });
+
+  var $ = function(id){ return document.getElementById(id); };
+  var kwList = $('kwList'), kwInput = $('kwInput');
+
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  function renderKeywords(){
+    kwList.innerHTML = keywords.map(function(k,i){
+      return '<span class="kw"><span>'+esc(k)+'</span><button type="button" data-i="'+i+'" aria-label="Remove '+esc(k)+'">×</button></span>';
+    }).join('');
+  }
+  function addKeyword(raw){
+    raw.split(',').map(function(s){return s.trim().replace(/^"+|"+$/g,'');}).filter(Boolean).forEach(function(k){
+      if (keywords.map(function(x){return x.toLowerCase();}).indexOf(k.toLowerCase()) === -1) keywords.push(k);
+    });
+    renderKeywords(); render();
+  }
+  kwInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ','){ e.preventDefault(); if (kwInput.value.trim()){ addKeyword(kwInput.value); kwInput.value=''; } }
+    else if (e.key === 'Backspace' && !kwInput.value && keywords.length){ keywords.pop(); renderKeywords(); render(); }
+  });
+  kwInput.addEventListener('blur', function(){ if (kwInput.value.trim()){ addKeyword(kwInput.value); kwInput.value=''; } });
+  kwInput.addEventListener('paste', function(e){
+    var t = (e.clipboardData || window.clipboardData).getData('text');
+    if (t && /[,\n]/.test(t)){ e.preventDefault(); addKeyword(t.replace(/\n/g,',')); }
+  });
+  $('kwBox').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-i]');
+    if (b){ keywords.splice(+b.getAttribute('data-i'),1); renderKeywords(); render(); return; }
+    kwInput.focus();
+  });
+
+  function chipHTML(f){
+    var lab = f.code ? '<code>'+esc(f.label)+'</code>' : esc(f.label);
+    return '<button type="button" class="chip" data-id="'+f.id+'" aria-pressed="'+(state[f.id]?'true':'false')+'"><span class="tick" aria-hidden="true"></span>'+lab+'</button>';
+  }
+  function renderChips(){
+    $('chipsText').innerHTML = TEXT_FP.map(chipHTML).join('');
+    $('chipsAdv').innerHTML = ADV_FP.map(chipHTML).join('');
+  }
+  document.addEventListener('click', function(e){
+    var c = e.target.closest('.chip');
+    if (c){ var id = c.getAttribute('data-id'); state[id] = !state[id]; c.setAttribute('aria-pressed', state[id]?'true':'false'); render(); }
+  });
+  $('selAll').addEventListener('click', function(){ Object.keys(state).forEach(function(k){state[k]=true;}); renderChips(); render(); });
+  $('selNone').addEventListener('click', function(){ Object.keys(state).forEach(function(k){state[k]=false;}); renderChips(); render(); });
+  ['exact','region','time','exclude','noSocial'].forEach(function(id){ $(id).addEventListener('input', render); $(id).addEventListener('change', render); });
+
+  function buildQueries(){
+    var fps = TEXT_FP.concat(ADV_FP).filter(function(f){return state[f.id];}).map(function(f){return f.q;});
+    var exact = $('exact').checked;
+    var excl = $('exclude').value.split(',').map(function(s){return s.trim().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'');}).filter(Boolean);
+    if ($('noSocial').checked) excl = excl.concat(SOCIAL);
+    excl = excl.filter(function(v,i,a){return a.indexOf(v)===i;});
+    var exclStr = excl.map(function(d){return '-site:'+d;}).join(' ');
+    var reg = $('region').value.split('|'), host = reg[0], gl = reg[1];
+    var tbs = $('time').value;
+    var out = [];
+    keywords.forEach(function(k){
+      var kq = exact ? '"'+k+'"' : k;
+      var chunks = [];
+      for (var i=0;i<fps.length;i+=MAX_FP_PER_QUERY) chunks.push(fps.slice(i,i+MAX_FP_PER_QUERY));
+      chunks.forEach(function(ch,ci){
+        var group = ch.length > 1 ? '('+ch.join(' OR ')+')' : ch[0];
+        var q = [kq, group, exclStr].filter(Boolean).join(' ');
+        var url = 'https://'+host+'/search?q='+encodeURIComponent(q)+'&gl='+gl+(tbs?'&tbs='+tbs:'');
+        out.push({keyword:k, q:q, url:url, part:ci+1, parts:chunks.length});
+      });
+    });
+    return {list:out, fpCount:fps.length};
+  }
+
+  var gIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3zM12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22zM6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2L6.4 14zM12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 5.9 12 5.9z"/></svg>';
+
+  function render(){
+    var r = buildQueries(), cards = $('cards');
+    if (!keywords.length){ cards.innerHTML = '<div class="empty">Add a keyword to start.</div>'; $('count').textContent=''; return; }
+    if (!r.fpCount){ cards.innerHTML = '<div class="empty">Pick at least one footprint.</div>'; $('count').textContent=''; return; }
+    $('count').textContent = r.list.length + (r.list.length===1?' search':' searches') + ' ready';
+    cards.innerHTML = r.list.map(function(it,i){
+      return '<article class="card">'+
+        '<div class="card-top"><h3>'+esc(it.keyword)+'</h3>'+(it.parts>1?'<span class="part">Search '+it.part+' of '+it.parts+'</span>':'')+'</div>'+
+        '<pre class="query">'+esc(it.q)+'</pre>'+
+        '<div class="card-actions">'+
+          '<a class="btn-google" href="'+esc(it.url)+'" target="_blank" rel="noopener">'+gIcon+'Search on Google</a>'+
+          '<button type="button" class="btn-ghost" data-copy="'+i+'">Copy query</button>'+
+        '</div></article>';
+    }).join('') + (r.list.some(function(x){return x.parts>1;}) ? '<p class="note">Split into multiple searches to fit Google\'s query limit.</p>' : '');
+    cards._list = r.list;
+  }
+
+  $('cards').addEventListener('click', function(e){
+    var b = e.target.closest('[data-copy]'); if (!b) return;
+    var it = $('cards')._list[+b.getAttribute('data-copy')];
+    var done = function(){ toast('Query copied'); };
+    try {
+      navigator.clipboard.writeText(it.q).then(done, function(){ selectQuery(b); });
+    } catch(err){ selectQuery(b); }
+  });
+  function selectQuery(b){
+    var pre = b.closest('.card').querySelector('.query');
+    var range = document.createRange(); range.selectNodeContents(pre);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    toast('Press Ctrl+C or Cmd+C to copy');
+  }
+  var tt;
+  function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){t.classList.remove('show');},1800); }
+
+  renderKeywords(); renderChips(); render();
+})();
+</script>
+</body></html>
